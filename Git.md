@@ -149,3 +149,9 @@ Retrieving updates from another repository and updating local repos
 > git pull 
 
 
+## 9. Squashing Commits 
+
+1. Squashing Commits
+> git rebase -i HEAD~3
+
+

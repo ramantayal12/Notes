@@ -2,7 +2,11 @@
 
 > 1. mvn clean install
 > 2. mvn dependency:tree 
+2.1 mvn dependency:tree > sm.txt 
 > 3. mvn dependency:tree -Dverbose
 
 4. Maven will only use one version of each artifact in the end -- it doesn't do any fancy classloader isolation tricks. You can see which version it'll use with
 > $ mvn dependency:resolve
+
+5. Quality Check with Maven ( test case runs )
+> $ mvn clean install -U -Pquality_check

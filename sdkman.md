@@ -25,7 +25,7 @@ SDKMAN! is a tool to manage parallel versions of multiple SDKs, which SDKMAN! ca
 
 > $ sdk use java 17.0.5-amzn
 
-> $ sdk default java 14.0.1.j9-adpt
+> $ sdk default java 17.0.5-amzn
 
 ### 2.4 Removing a version
 
