@@ -7,3 +7,5 @@ Of course, there are solutions available that help make applications resilient a
 The Hystrix framework library helps to control the interaction between services by providing fault tolerance and latency tolerance. It improves overall resilience of the system by isolating the failing services and stopping the cascading effect of failures.
 
 
+- Open Source Library ( created by Netflix )
+- implements circuit breaker pattern
