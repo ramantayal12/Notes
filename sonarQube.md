@@ -1,13 +1,13 @@
 1. To Run Sonar on Local
       ```
-        git clone https://github.com/SonarSource/docker-sonarqube
-        cd docker-sonarqube/9/community
+        a. git clone https://github.com/SonarSource/docker-sonarqube
+        b. cd docker-sonarqube/9/community
     
         #build
-        docker build -t sonarqube-arm .
+        c. docker build -t sonarqube-arm .
     
         #run
-        docker run -d -p 9000:9000 sonarqube-arm
+        d. docker run -d -p 9000:9000 sonarqube-arm
       ```
 
 2. Sensitive Code 
