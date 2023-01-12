@@ -9,4 +9,4 @@
 
 2. Now Add the SSH key
     > eval "$(ssh-agent -s)" \
-3. $ ssh-add -K /Users/you/.ssh/id_rsa   
+3. ```$ ssh-add -K /Users/you/.ssh/id_rsa```   
