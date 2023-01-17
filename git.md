@@ -17,7 +17,7 @@ Configuring user information used across all local repositories.
 Configuring user information, initializing and cloning repositories
 
 1. initialize an existing directory as a Git repository
-    > git init 
+    > git init
 
 2. retrieve an entire repository from a hosted location via URL
     > git clone [url]
@@ -115,4 +115,19 @@ Retrieving updates from another repository and updating local repos
 
 1. Squashing Commits
     > git rebase -i HEAD~3
+
+
+## 10. Pushing a local project to github/gitlab
+1. inti the repo 
+   > git init 
+
+2. create repo on gitlab and copy ssh link
+   > git remote add project_name ssh_link
+
+3. commit the changes and then push the branch 
+   ```
+   > git add . 
+   > git commit -am "initial commit"
+   > git push --set-upstream project_name main
+   ```
 
