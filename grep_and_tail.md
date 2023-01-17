@@ -18,3 +18,18 @@
     > grep -v '[0-9]' input.txt
 
      [0-9] in the above example is a regex that matches on a single numerical digit.
+
+## tail
+The tail command is frequently used to monitor log files.
+
+1. basic structure
+    > <some_command> | tail
+
+    > tail -version 
+   
+2. -n num : prints the last 'num' lines from the file specified
+    > tail -3 input.txt
+
+3. -c num : prints the last ‘num’ bytes from the file specified
+    > tail -c -6 state.txt
+
