@@ -1,3 +1,4 @@
+# maven 
 ## Basic Commands
 
 1. $ `mvn clean install`
@@ -17,4 +18,19 @@
 
 7. Compiling Specific Module
     ![maven_compiling_specific_module.png](files%2Fmaven_compiling_specific_module.png)
-  
+
+
+# java_home_setup
+1. finding path of java_home
+   > $ /usr/libexec/java_home -v 1.8
+
+2. Export Java Home
+   > $ export JAVA_HOME="path_to_java_home" \
+   > $ export JAVA_HOME="/Users/raman.tayal/Library/Java/JavaVirtualMachines/corretto-1.8.0_352/Contents/Home"
+
+3. checking certificates
+   > keytool -list -keystore $JAVA_HOME/jre/lib/security/cacerts
+   password is "changeit"
+
+4. adding certificates
+   > keytool -import -alias stage_aerospike -keystore $JAVA_HOME/jre/lib/security/cacerts -file ~/PhonePe/visana/visana-server/certs/stage_aerospike_cert.pem
