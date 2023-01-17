@@ -1,0 +1,11 @@
+Linux is a great system.
+Learning linux is very interesting.
+
+This Linux system has 17 users.
+The uptime of this linux system: 77 hours.
+
+File report
+There are 100 directories under */*.
+There are 250 files under */opt*.
+There are 300 files under */home/root*.
+There are 20 mountpoints.
