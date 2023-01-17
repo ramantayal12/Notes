@@ -5,32 +5,26 @@ Git is the free and open source distributed version control system that's respon
 ## 1. SetUp
 Configuring user information used across all local repositories.
 1.  set a name that is identifiable for credit when review version history
-
     > git config --global user.name “[firstname lastname]” 
 
 2. set an email address that will be associated with each history marker
-
     > git config --global user.email “[valid-email]”
 
 3. set automatic command line coloring for Git for easy reviewing
-
     > git config --global color.ui auto
 
 ## 2. Init
 Configuring user information, initializing and cloning repositories
 
 1. initialize an existing directory as a Git repository
-
     > git init 
 
 2. retrieve an entire repository from a hosted location via URL
-    
     > git clone [url]
 
 ## 3. Stage and SnapShot
 Working with snapshots and the Git staging area.
 1. show modified files in working directory, staged for your next commit.
-
     > git status 
 
 2. add a file as it looks now to your next commit (stage).
