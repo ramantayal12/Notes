@@ -1,4 +1,4 @@
-# Hystrix
+# hystrix
 
 Microservices are prone to failure or delayed responses. If a service fails it may impact on other services affecting performance and possibly making other parts of application inaccessible or in the worst case bring down the whole application.
 

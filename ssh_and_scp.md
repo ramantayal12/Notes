@@ -1,12 +1,14 @@
 # ssh : Secure Shell
 - protocol used to securely connect to remote server
-- Syntax:
-   > ssh user_name@host
+  - Syntax:
+    ```ssh user_name@host```
 
-   - For Connecting to a specific port 
-      > ssh -p {port_number} user_name@host 
-
-   > Example : ssh raman.tayal@prd-ins-deploy101.fsins.az8
+    - For Connecting to a specific port 
+         ```ssh -p {port_number} user_name@host```
+        Example : ssh raman.tayal@prd-ins-deploy101.fsins.az8
+    
+    - Opens a SOCKS tunnel on the specified port number
+        ```ssh -D 9090 [USER]@[SERVER_IP]```
 
 - For generating public-private keys ( as keys are more secure than passwords )
    > ssh-keygen
