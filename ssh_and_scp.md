@@ -1,4 +1,6 @@
 # ssh : Secure Shell
+
+## ssh : connecting to remote server 
 - protocol used to securely connect to remote server
   - Syntax:
     ```ssh user_name@host```
@@ -10,20 +12,18 @@
     - Opens a SOCKS tunnel on the specified port number
         ```ssh -D 9090 [USER]@[SERVER_IP]```
 
-- For generating public-private keys ( as keys are more secure than passwords )
-   > ssh-keygen
 
-## Generating and Adding New SSH Key
+## ssh :generating and adding new ssh key
 
 1. Generate the SSH Key
     ```
-    a. ssh-keygen -t ed25519 -C "your_email@example.com" \
-    or this \
-    b. ssh-keygen -t rsa -b 4096 -C "your_email@example.com" \
-   ```
+   ssh-keygen
+    ``` 
+   this will create two keys in id_rsa(by default) one will be public and another one will be private, we need to add public key to github/remote_server and keep private key safe.
 
 2. Now Add the SSH key
-    > eval "$(ssh-agent -s)" \
+    > eval "$(ssh-agent -s)" 
+
 3. ```$ ssh-add -K /Users/you/.ssh/id_rsa```
 
 # scp : secure copy protocol
