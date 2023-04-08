@@ -1,8 +1,16 @@
 # maven 
 ## Basic Commands
 
-1. $ `mvn clean install`
-2. `mvn dependency:tree`
+1. Compiling Project 
+   > $ mvn clean install
+   
+   1.1 Compiling Project With force Update
+   > $ mvn clean install -U 
+   
+   1.2 Compiling Project Continue if one module failes 
+   > $ mvn clean install --fail-at-end
+   
+2. `mvn dependency:tree` \
     2.1 `mvn dependency:tree > sm.txt` 
 
 3. `mvn dependency:tree -Dverbose`
@@ -17,6 +25,8 @@
     > $ mvn deploy -U -DskipTests=true -Pdocker -T 5
 
 7. Compiling Specific Module
+    > $ mvn clean install -U -DskipTests -rf :module_name
+
     ![maven_compiling_specific_module.png](files%2Fmaven_compiling_specific_module.png)
 
 
