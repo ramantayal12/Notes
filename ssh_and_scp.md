@@ -44,3 +44,13 @@
 
    c. For re-attaching the Screen
    > screen -r screen_name
+
+
+# sha :  secure hash algorithm
+
+The SHA-256 algorithm generates an almost unique, fixed-size 256-bit (32-byte) hash. This is a one-way function, so the result cannot be decrypted back to the original value.
+
+- MessageDigest in Java
+- Guava Library
+- Apache Commons Codecs - Utility Class - ```DigestUtil```
+- Bouncy Castle Library
