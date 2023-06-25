@@ -33,9 +33,9 @@
       1. ```$ brew install jenv```
     
    2. verify install and paths change 
-      1. $ jenv doctor 
-      2. $ echo 'export PATH="$HOME/.jenv/bin:$PATH"' >> ~/.zshrc 
-      3. $ echo 'eval "$(jenv init -)"' >> ~/.zshrc
+      1. ```$ jenv doctor``` 
+      2. ```$ echo 'export PATH="$HOME/.jenv/bin:$PATH"' >> ~/.zshrc``` 
+      3. ```$ echo 'eval "$(jenv init -)"' >> ~/.zshrc```
     
    3. add Java environments 
       1. ```$ jenv add /Users/raman.tayal/Library/Java/JavaVirtualMachˀines/corretto-1.8.0_342/Contents/Home \```
