@@ -10,10 +10,13 @@
    1.2 Compiling Project Continue if one module failes 
    > $ mvn clean install --fail-at-end
    
-2. `mvn dependency:tree` \
-    2.1 `mvn dependency:tree > sm.txt` 
+2. >  $ mvn dependency:tree
 
-3. `mvn dependency:tree -Dverbose`
+   2.1 for printing it in a text file 
+   > mvn dependency:tree > sm.txt` 
+   
+3. The "-Dverbose" flag is used to enable verbose output, which provides additional details about the dependencies. With this flag, the command will display more information, such as the versions of each dependency, conflicts between dependencies, and where the dependencies are being used in your project.
+   > $ mvn dependency:tree -Dverbose
 
 4. Maven will only use one version of each artifact in the end -- it doesn't do any fancy classloader isolation tricks. You can see which version it'll use with
     > $ mvn dependency:resolve
