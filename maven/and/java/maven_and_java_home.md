@@ -11,9 +11,12 @@
      - ```mvn clean install --fail-at-end```
    
 2. For getting library dependencies
-   1. ```$ mvn dependency:tree```
-   2. for printing it in a text file 
-      - ```mvn dependency:tree > sm.txt``` 
+   - ``` mvn dependency:tree```
+   - for printing it in a text file 
+      - ```mvn dependency:tree > sm.txt```
+   - for finding unused dependencies and dependecy conflicts
+     - ``` mvn dependency: analyze```
+   
    
 3. The "-Dverbose" flag is used to enable verbose output, which provides additional details about the dependencies. With this flag, the command will display more information, such as the versions of each dependency, conflicts between dependencies, and where the dependencies are being used in your project. 
    - ```mvn dependency:tree -Dverbose```

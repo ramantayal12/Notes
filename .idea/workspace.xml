@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="38707ce5-5cb0-4134-b79e-0683ad403790" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/Notes.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dbnavigator.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/jpa-buddy.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/JUnit.md" beforeDir="false" afterPath="$PROJECT_DIR$/maven/and/java/JUnit.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/database_in_practice.md" beforeDir="false" afterPath="$PROJECT_DIR$/database/database_in_practice.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/db_modelling.md" beforeDir="false" afterPath="$PROJECT_DIR$/database/db_modelling.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/design_patterns.md" beforeDir="false" afterPath="$PROJECT_DIR$/design/patterns/design_patterns.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/git.md" beforeDir="false" afterPath="$PROJECT_DIR$/git/git.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/grep_and_tail.md" beforeDir="false" afterPath="$PROJECT_DIR$/ssh/and/cli/grep_and_tail.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/hystrix.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/java17migration.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/kafka.md" beforeDir="false" afterPath="$PROJECT_DIR$/kafka/kafka.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/maven_and_java_home.md" beforeDir="false" afterPath="$PROJECT_DIR$/maven/and/java/maven_and_java_home.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Notes/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Notes/.idea/Notes.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Notes/.idea/jpa-buddy.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Notes/.idea/misc.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Notes/.idea/modules.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Notes/.idea/vcs.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Notes/FuzzyMatchResponse.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Notes/Git.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Notes/JUnit.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Notes/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Notes/UnitTestingExtraThings.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Notes/comparingTwoStringsUsingOptional.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Notes/db_modelling.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Notes/files/RDBMS Shines.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Notes/files/RDBMS issues.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Notes/files/Vertical and Horizontal Sharding.webp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Notes/files/data_modelling_in_rdbms.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Notes/files/database_considerations.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Notes/files/sharding_example.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Notes/files/types_of_databases.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Notes/hystrix.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Notes/java_home_setup.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Notes/jenv.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Notes/maven.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Notes/sdkman.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pyroscope.md" beforeDir="false" afterPath="$PROJECT_DIR$/tools/pyroscope/pyroscope.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pythonCertificate.md" beforeDir="false" afterPath="$PROJECT_DIR$/python/pythonCertificate.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sdkman_and_jenv.md" beforeDir="false" afterPath="$PROJECT_DIR$/maven/and/java/sdkman_and_jenv.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sonarQube.md" beforeDir="false" afterPath="$PROJECT_DIR$/tools/sonar/sonarQube.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ssh_scp_sha.md" beforeDir="false" afterPath="$PROJECT_DIR$/ssh/and/cli/ssh_scp_sha.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/terminal_commands.md" beforeDir="false" afterPath="$PROJECT_DIR$/ssh/and/cli/terminal_commands.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tools.md" beforeDir="false" afterPath="$PROJECT_DIR$/tools/tools.md" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "associatedIndex": 5
+}]]></component>
+  <component name="ProjectId" id="2omk2nNCpnDVSIZa7jlueYQ1jBD" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+    <option name="showMembers" value="true" />
+    <option name="showVisibilityIcons" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "main",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "/Users/ramant/Documents/Notes"
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/maven/and/java" />
+      <recent name="$PROJECT_DIR$/tools/pyroscope" />
+      <recent name="$PROJECT_DIR$/tools" />
+      <recent name="$PROJECT_DIR$/sonar" />
+      <recent name="$PROJECT_DIR$/python" />
+    </key>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="38707ce5-5cb0-4134-b79e-0683ad403790" name="Changes" comment="" />
+      <created>1731481933372</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1731481933372</updated>
+    </task>
+    <servers />
+  </component>
+</project>
