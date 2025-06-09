@@ -1,0 +1,51 @@
+version: '3.8'
+
+services:
+  opensearch:
+    image: opensearchproject/opensearch:2.11.1 # <--- CHANGE THIS LINE
+    container_name: desktop-opensearch-1
+    environment:
+      - discovery.type=single-node
+      - DISABLE_SECURITY_PLUGIN=true
+      - "OPENSEARCH_JAVA_OPTS=-Xms512m -Xmx512m" # Keep this, good practice
+    ports:
+      - "9200:9200"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+    healthcheck: # Add a healthcheck for better depends_on behavior
+      test: ["CMD-SHELL", "curl -f http://localhost:9200/_cluster/health?wait_for_status=yellow&timeout=5s"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  dashboards:
+    image: opensearchproject/opensearch-dashboards:2.11.1 # <--- CHANGE THIS LINE
+    container_name: dashboards
+    ports:
+      - 5601:5601
+    environment:
+      - OPENSEARCH_HOSTS=["http://opensearch:9200"]
+    depends_on:
+      opensearch:
+        condition: service_healthy # This is good practice to ensure OpenSearch is ready before Dashboards starts
+
+
+  mysql:
+    image: mysql:8
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_DATABASE: testdb
+      MYSQL_USER: user
+      MYSQL_PASSWORD: userpass
+    ports:
+      - "3306:3306"
+
+  mongodb:
+    image: mongo:6
+    ports:
+      - "27017:27017"
