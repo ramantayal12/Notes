@@ -73,6 +73,16 @@ From the folder where you saved `docker-compose.yml`, execute:
 docker-compose up -d
 ```
 
+### 3. Stop docker service 
+```bash
+docker-compose down --remove-orphans
+```
+
+To clean up all stopped containers and free up names:
+```bash
+docker container prune
+```
+
 ### Access Your Services
 
 | Service       | URL / Port          | Notes                 |
