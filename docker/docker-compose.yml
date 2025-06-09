@@ -1,42 +1,35 @@
-version: '3.8'
-
 services:
-  opensearch:
-    image: opensearchproject/opensearch:2.11.1 # <--- CHANGE THIS LINE
-    container_name: desktop-opensearch-1
-    environment:
-      - discovery.type=single-node
-      - DISABLE_SECURITY_PLUGIN=true
-      - "OPENSEARCH_JAVA_OPTS=-Xms512m -Xmx512m" # Keep this, good practice
+  spring-boot-app:
+    build:
+      context: /Users/rtayal/Documents/GitHub/scheduler
+      dockerfile: Dockerfile
+      args:
+        JAR_FILE: scheduler-server.jar
+    container_name: my-spring-boot-app
     ports:
-      - "9200:9200"
-    ulimits:
-      memlock:
-        soft: -1
-        hard: -1
-      nofile:
-        soft: 65536
-        hard: 65536
-    healthcheck: # Add a healthcheck for better depends_on behavior
-      test: ["CMD-SHELL", "curl -f http://localhost:9200/_cluster/health?wait_for_status=yellow&timeout=5s"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
+      - "8080:8080"
+      - "7085:7085"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/testdb?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+      SPRING_DATASOURCE_USERNAME: user
+      SPRING_DATASOURCE_PASSWORD: userpass
 
-  dashboards:
-    image: opensearchproject/opensearch-dashboards:2.11.1 # <--- CHANGE THIS LINE
-    container_name: dashboards
-    ports:
-      - 5601:5601
-    environment:
-      - OPENSEARCH_HOSTS=["http://opensearch:9200"]
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
     depends_on:
-      opensearch:
-        condition: service_healthy # This is good practice to ensure OpenSearch is ready before Dashboards starts
-
+      mysql:
+        condition: service_healthy
+      kafka:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
+      interval: 60s
+      timeout: 20s
+      retries: 5
+      start_period: 60s
 
   mysql:
-    image: mysql:8
+    image: mysql:latest
+    container_name: mysql
     environment:
       MYSQL_ROOT_PASSWORD: rootpass
       MYSQL_DATABASE: testdb
@@ -44,71 +37,51 @@ services:
       MYSQL_PASSWORD: userpass
     ports:
       - "3306:3306"
-
-  mongodb:
-    image: mongo:6
-    ports:
-      - "27017:27017"
-
-  zookeeper:
-    image: bitnami/zookeeper:latest
-    container_name: zookeeper
-    environment:
-      - ALLOW_ANONYMOUS_LOGIN=yes
-    ports:
-      - "2181:2181"
     healthcheck:
-      test: ["CMD", "echo", "ruok", "|", "nc", "-w", "5", "localhost", "2181"]
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
       interval: 10s
       timeout: 5s
       retries: 5
       start_period: 30s
 
   kafka:
-    image: bitnami/kafka:latest
+    image: bitnami/kafka:latest # This will pull the latest stable Apache Kafka version, which is 4.0.x or newer, supporting KRaft by default.
+    hostname: kafka
     container_name: kafka
-    environment:
-      - KAFKA_BROKER_ID=1
-      - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
-      - ALLOW_PLAINTEXT_LISTENER=yes
-      - KAFKA_LISTENERS=PLAINTEXT://:9092
-      - KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://localhost:9092
     ports:
-      - "9092:9092"
+      - "9092:9092" # External port for clients
+    environment:
+      KAFKA_CFG_NODE_ID: 0 # Unique ID for this node in the KRaft cluster
+      KAFKA_CFG_PROCESS_ROLES: controller,broker # This node acts as both controller and broker
+      KAFKA_CFG_LISTENERS: PLAINTEXT://:9092,CONTROLLER://:9093 # PLAINTEXT for client, CONTROLLER for KRaft
+      # IMPORTANT: Advertised listeners for external connectivity.
+      # Use `host.docker.internal` on macOS/Windows for host access from container,
+      # or your machine's IP. `localhost` works on Linux.
+      KAFKA_CFG_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
+      KAFKA_CFG_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      # For a single-node KRaft cluster, the quorum voters include itself.
+      KAFKA_CFG_CONTROLLER_QUORUM_VOTERS: 0@kafka:9093
+      # A unique ID for the KRaft cluster. Generate this once and keep it.
+      # You can generate a UUID with 'kafka-storage.sh random-uuid' from inside a Kafka container.
+      KAFKA_KRAFT_CLUSTER_ID: "abcdefghijklmnopqrstuv" # REPLACE THIS WITH A REAL UUID FOR PRODUCTION
+      # Allows plaintext listeners for development purposes. For production, use SSL/SASL.
+      ALLOW_PLAINTEXT_LISTENER: "yes"
+    healthcheck:
+      test: ["CMD-SHELL", "kafka-topics.sh --bootstrap-server localhost:9092 --list > /dev/null"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s # Give Kafka sufficient time to initialize in KRaft mode
+
+  # Optional: Kafka UI for easier management
+  kafka-ui:
+    image: provectuslabs/kafka-ui
+    container_name: kafka-ui
+    ports:
+      - "8080:8080"
+    environment:
+      KAFKA_CLUSTERS_0_NAME: local-kafka
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:9092
     depends_on:
-      - zookeeper
-    healthcheck:
-      test: ["CMD", "kafka-broker-api-versions", "--bootstrap-server", "localhost:9092"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-      start_period: 30s
-
-  grafana:
-    image: grafana/grafana:latest
-    container_name: grafana
-    ports:
-      - "3000:3000"
-    environment:
-      - GF_SECURITY_ADMIN_PASSWORD=admin  # Default password is admin
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3000/api/health"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-      start_period: 30s
-
-  metabase:
-    image: metabase/metabase:latest
-    container_name: metabase
-    ports:
-      - "3001:3000"
-    environment:
-      - MB_DB_FILE=/metabase-data/metabase.db
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3000/api/health"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-      start_period: 30s
-
+      kafka:
+        condition: service_healthy
