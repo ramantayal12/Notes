@@ -1,42 +1,41 @@
 services:
-  spring-boot-app:
-    build:
-      context: /Users/rtayal/Documents/GitHub/scheduler
-      dockerfile: Dockerfile
-      args:
-        JAR_FILE: scheduler-server.jar
-    container_name: my-spring-boot-app
-    ports:
-      - "8081:8081"
-      - "7085:7085"
-    environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/testdb?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
-      SPRING_DATASOURCE_USERNAME: user
-      SPRING_DATASOURCE_PASSWORD: userpass
-
-      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
-    depends_on:
-      mysql:
-        condition: service_healthy
-      kafka:
-        condition: service_healthy
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
-      interval: 60s
-      timeout: 20s
-      retries: 5
-      start_period: 60s
+#  spring-boot-app:
+#    build:
+#      context: /Users/rtayal/Documents/GitHub/scheduler
+#      dockerfile: Dockerfile
+#      args:
+#        JAR_FILE: scheduler-server.jar
+#    container_name: my-spring-boot-app
+#    ports:
+#      - "8081:8081"
+#      - "7085:7085"
+#    environment:
+#      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3308/testdb?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+#      SPRING_DATASOURCE_USERNAME: user
+#      SPRING_DATASOURCE_PASSWORD: userpass
+#      SPRING_KAFKA_BOOTSTRAP_SERVERS: host.docker.internal:9092
+#
+#    depends_on:
+#       mysql:
+#         condition: service_healthy
+#       kafka:
+#         condition: service_healthy
+#    healthcheck:
+#      test: ["CMD", "curl", "-f", "http://localhost:8081/actuator/health"]
+#      interval: 60s
+#      timeout: 20s
+#      retries: 5
+#      start_period: 60s
 
   mysql:
     image: mysql:latest
-    container_name: mysql
     environment:
       MYSQL_ROOT_PASSWORD: rootpass
       MYSQL_DATABASE: testdb
       MYSQL_USER: user
       MYSQL_PASSWORD: userpass
     ports:
-      - "3306:3306"
+      - "3308:3306" #host connection is 3308
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
       interval: 10s
@@ -45,43 +44,45 @@ services:
       start_period: 30s
 
   kafka:
-    image: bitnami/kafka:latest # This will pull the latest stable Apache Kafka version, which is 4.0.x or newer, supporting KRaft by default.
+    image: confluentinc/cp-kafka:latest
     hostname: kafka
     container_name: kafka
     ports:
-      - "9092:9092" # External port for clients
+      - "9092:9092"
+      - "9093:9093"
     environment:
-      KAFKA_CFG_NODE_ID: 0 # Unique ID for this node in the KRaft cluster
-      KAFKA_CFG_PROCESS_ROLES: controller,broker # This node acts as both controller and broker
-      KAFKA_CFG_LISTENERS: PLAINTEXT://:9092,CONTROLLER://:9093 # PLAINTEXT for client, CONTROLLER for KRaft
-      # IMPORTANT: Advertised listeners for external connectivity.
-      # Use `host.docker.internal` on macOS/Windows for host access from container,
-      # or your machine's IP. `localhost` works on Linux.
-      KAFKA_CFG_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
-      KAFKA_CFG_CONTROLLER_LISTENER_NAMES: CONTROLLER
-      # For a single-node KRaft cluster, the quorum voters include itself.
-      KAFKA_CFG_CONTROLLER_QUORUM_VOTERS: 0@kafka:9093
-      # A unique ID for the KRaft cluster. Generate this once and keep it.
-      # You can generate a UUID with 'kafka-storage.sh random-uuid' from inside a Kafka container.
-      KAFKA_KRAFT_CLUSTER_ID: "abcdefghijklmnopqrstuv" # REPLACE THIS WITH A REAL UUID FOR PRODUCTION
-      # Allows plaintext listeners for development purposes. For production, use SSL/SASL.
-      ALLOW_PLAINTEXT_LISTENER: "yes"
+      KAFKA_KRAFT_MODE: "true"  # This enables KRaft mode in Kafka.
+      KAFKA_PROCESS_ROLES: controller,broker  # Kafka acts as both broker and controller.
+      KAFKA_NODE_ID: 1  # A unique ID for this Kafka instance.
+      KAFKA_CONTROLLER_QUORUM_VOTERS: "1@localhost:9093"  # Defines the controller voters.
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092,CONTROLLER://0.0.0.0:9093
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,CONTROLLER:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
+      KAFKA_LOG_DIRS: /var/lib/kafka/data  # Where Kafka stores its logs.
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"  # Kafka will automatically create topics if needed.
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1  # Since we’re running one broker, one replica is enough.
+      KAFKA_LOG_RETENTION_HOURS: 168  # Keep logs for 7 days.
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0  # No delay for consumer rebalancing.
+      CLUSTER_ID: "Mk3OEYBSD34fcwNTJENDM2Qk"  # A unique ID for the Kafka cluster.
     healthcheck:
-      test: ["CMD-SHELL", "kafka-topics.sh --bootstrap-server localhost:9092 --list > /dev/null"]
+      test: [ "CMD", "bash", "-c", "nc -z localhost 9092 && echo 'Client listener is up' || exit 1" ] # Basic listener check
+      # A more robust check for KRaft to ensure broker is fully functional might involve:
+      # test: ["CMD", "bash", "-c", "kafka-broker-api-versions.sh --bootstrap-server localhost:9092 > /dev/null 2>&1 && echo 'Kafka broker is healthy' || exit 1"]
       interval: 10s
       timeout: 5s
       retries: 5
-      start_period: 30s # Give Kafka sufficient time to initialize in KRaft mode
+      start_period: 40s
 
-  # Optional: Kafka UI for easier management
   kafka-ui:
-    image: provectuslabs/kafka-ui
-    container_name: kafka-ui
+    image: provectuslabs/kafka-ui:latest
     ports:
-      - "8080:8080"
-    environment:
-      KAFKA_CLUSTERS_0_NAME: local-kafka
-      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:9092
+      - "8085:8080"
     depends_on:
-      kafka:
-        condition: service_healthy
+      - kafka
+    environment:
+      KAFKA_CLUSTERS_0_NAME: local
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:29092
+      KAFKA_CLUSTERS_0_METRICS_PORT: 9998
+      DYNAMIC_CONFIG_ENABLED: 'true'
