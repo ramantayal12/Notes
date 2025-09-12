@@ -1,88 +1,151 @@
+version: '3.8'
 services:
-#  spring-boot-app:
-#    build:
-#      context: /Users/rtayal/Documents/GitHub/scheduler
-#      dockerfile: Dockerfile
-#      args:
-#        JAR_FILE: scheduler-server.jar
-#    container_name: my-spring-boot-app
-#    ports:
-#      - "8081:8081"
-#      - "7085:7085"
-#    environment:
-#      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3308/testdb?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
-#      SPRING_DATASOURCE_USERNAME: user
-#      SPRING_DATASOURCE_PASSWORD: userpass
-#      SPRING_KAFKA_BOOTSTRAP_SERVERS: host.docker.internal:9092
-#
-#    depends_on:
-#       mysql:
-#         condition: service_healthy
-#       kafka:
-#         condition: service_healthy
-#    healthcheck:
-#      test: ["CMD", "curl", "-f", "http://localhost:8081/actuator/health"]
-#      interval: 60s
-#      timeout: 20s
-#      retries: 5
-#      start_period: 60s
-
   mysql:
     image: mysql:latest
+    container_name: mysql
     environment:
       MYSQL_ROOT_PASSWORD: rootpass
       MYSQL_DATABASE: testdb
       MYSQL_USER: user
       MYSQL_PASSWORD: userpass
     ports:
-      - "3308:3306" #host connection is 3308
+      - "3306:3306"
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
       interval: 10s
       timeout: 5s
       retries: 5
       start_period: 30s
+    networks:
+      - app_network
 
-  kafka:
-    image: confluentinc/cp-kafka:latest
-    hostname: kafka
-    container_name: kafka
-    ports:
-      - "9092:9092"
-      - "9093:9093"
+  zookeeper:
+    image: bitnami/zookeeper:latest
+    container_name: zookeeper
     environment:
-      KAFKA_KRAFT_MODE: "true"  # This enables KRaft mode in Kafka.
-      KAFKA_PROCESS_ROLES: controller,broker  # Kafka acts as both broker and controller.
-      KAFKA_NODE_ID: 1  # A unique ID for this Kafka instance.
-      KAFKA_CONTROLLER_QUORUM_VOTERS: "1@localhost:9093"  # Defines the controller voters.
-      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092,CONTROLLER://0.0.0.0:9093
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,CONTROLLER:PLAINTEXT
-      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
-      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
-      KAFKA_LOG_DIRS: /var/lib/kafka/data  # Where Kafka stores its logs.
-      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"  # Kafka will automatically create topics if needed.
-      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1  # Since we’re running one broker, one replica is enough.
-      KAFKA_LOG_RETENTION_HOURS: 168  # Keep logs for 7 days.
-      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0  # No delay for consumer rebalancing.
-      CLUSTER_ID: "Mk3OEYBSD34fcwNTJENDM2Qk"  # A unique ID for the Kafka cluster.
+      - ALLOW_ANONYMOUS_LOGIN=yes
+      - ZOO_PORT_NUMBER=2181
+    ports:
+      - "2181:2181"
+    volumes:
+      - zookeeper_data:/bitnami/zookeeper
     healthcheck:
-      test: [ "CMD", "bash", "-c", "nc -z localhost 9092 && echo 'Client listener is up' || exit 1" ] # Basic listener check
-      # A more robust check for KRaft to ensure broker is fully functional might involve:
-      # test: ["CMD", "bash", "-c", "kafka-broker-api-versions.sh --bootstrap-server localhost:9092 > /dev/null 2>&1 && echo 'Kafka broker is healthy' || exit 1"]
+      test: ["CMD-SHELL", "zkServer.sh status || exit 1"]
       interval: 10s
       timeout: 5s
       retries: 5
-      start_period: 40s
+      start_period: 10s
+
+  redis:
+    image: redis:latest
+    hostname: redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - app_network
+
+  kafka:
+    image: confluentinc/cp-kafka:7.2.1
+    hostname: kafka
+    container_name: kafka
+    ports:
+      - "9092:9092"    # host-exposed broker (legacy/host clients)
+      - "29092:29092"  # recommended external listener for host tools (map as you prefer)
+      - "29093:29093"  # controller listener exposed (optional)
+      - "9997:9997"    # JMX (if you need monitor)
+    environment:
+      # KRaft mode: controller + broker
+      KAFKA_PROCESS_ROLES: "controller,broker"
+      # Node id (unique int per node). For single-node set 1
+      KAFKA_NODE_ID: 1
+      # IMPORTANT: add the CLUSTER_ID you generated above (replace the example value)
+      KAFKA_CLUSTER_ID: "REPLACE_WITH_YOUR_GENERATED_CLUSTER_ID"
+
+      # Listeners: broker listener + controller listener + optional host listener
+      # Broker endpoints inside container (internal) and external for host
+      KAFKA_LISTENERS: "CONTROLLER://0.0.0.0:29093,INTERNAL://0.0.0.0:29092,EXTERNAL://0.0.0.0:9092"
+      KAFKA_ADVERTISED_LISTENERS: "CONTROLLER://kafka:29093,INTERNAL://kafka:29092,EXTERNAL://localhost:9092"
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: "CONTROLLER:PLAINTEXT,INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT"
+      # Inter-broker should use the INTERNAL listener
+      KAFKA_INTER_BROKER_LISTENER_NAME: "INTERNAL"
+      KAFKA_CONTROLLER_LISTENER_NAMES: "CONTROLLER"
+
+      # Useful local settings (tune as needed)
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
+      KAFKA_NUM_PARTITIONS: 1
+
+      # JMX (kept from your original)
+      KAFKA_JMX_PORT: 9997
+      KAFKA_JMX_OPTS: -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Djava.rmi.server.hostname=kafka -Dcom.sun.management.jmxremote.rmi.port=9997
+
+      # JVM heap (tune for your machine)
+      KAFKA_HEAP_OPTS: "-Xmx512m -Xms512m"
+
+    volumes:
+      - ./init-files/kafka/scripts/update_run.sh:/tmp/update_run.sh
+      - kafka_data:/var/lib/kafka/data
+    command: "bash -c 'if [ ! -f /tmp/update_run.sh ]; then echo \"ERROR: Did you forget the update_run.sh file that came with this docker-compose.yml file?\" && exit 1 ; else chmod +x /tmp/update_run.sh && /tmp/update_run.sh && /etc/confluent/docker/run ; fi'"
+    networks:
+      - app_network
+
 
   kafka-ui:
     image: provectuslabs/kafka-ui:latest
+    container_name: kafka-ui
     ports:
       - "8085:8080"
     depends_on:
-      - kafka
+      kafka:
+        condition: service_healthy
     environment:
       KAFKA_CLUSTERS_0_NAME: local
-      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:29092
-      KAFKA_CLUSTERS_0_METRICS_PORT: 9998
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:9092
       DYNAMIC_CONFIG_ENABLED: 'true'
+    networks:
+      - app_network
+
+  hbase:
+    image: harisekhon/hbase:latest
+    platform: linux/amd64
+    container_name: hbase
+    depends_on:
+      zookeeper:
+        condition: service_started
+    ports:
+      - "16010:16010"  # HBase Master Web UI
+      - "16020:16020"  # HBase RegionServer Web UI
+      - "16030:16030"  # HBase Thrift Server
+      - "9090:9090"    # HBase Thrift Server
+      - "9095:9095"    # HBase REST Server
+    environment:
+      - HBASE_CONF_hbase_rootdir=/hbase-data
+      - HBASE_CONF_hbase_zookeeper_quorum=zookeeper
+      - HBASE_CONF_hbase_zookeeper_property_clientPort=2181
+      - HBASE_HEAPSIZE=512m
+    volumes:
+      - hbase_data:/hbase-data
+    networks:
+      - app_network
+    # Add resource limits
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+        reservations:
+          memory: 512M
+
+volumes:
+  hbase_data:
+  zookeeper_data:
+  kafka_data:
+  redis_data:
+
+networks:
+  app_network:
+    driver: bridge

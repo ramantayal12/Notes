@@ -78,6 +78,21 @@ docker-compose up -d
 docker-compose down --remove-orphans
 ```
 
+### 4. Check Logs 
+```bash
+docker-compose logs -f
+```
+
+### 5. Check Logs of a container
+```bash
+docker logs -f <container_name>
+```
+
+### 6. Status of Applications 
+```bash
+docker-compose ps
+```
+
 To clean up all stopped containers and free up names:
 ```bash
 docker container prune
