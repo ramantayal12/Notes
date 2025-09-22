@@ -46,18 +46,6 @@ services:
     networks:
       - app_network
 
-  kafka-ui:
-    image: provectuslabs/kafka-ui:latest
-    container_name: kafka-ui
-    ports:
-      - "8085:8080" # Access kafka-ui at http://localhost:8085
-    environment:
-      KAFKA_CLUSTERS_0_NAME: local
-      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:9092
-      DYNAMIC_CONFIG_ENABLED: 'true'
-    networks:
-      - app_network
-
   grafana:
     image: grafana/grafana-oss:latest
     container_name: grafana
@@ -101,7 +89,6 @@ services:
 volumes:
   hbase_data:
   zookeeper_data:
-  kafka_data:
   redis_data:
   grafana-data:
 

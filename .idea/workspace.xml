@@ -4,7 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="38707ce5-5cb0-4134-b79e-0683ad403790" name="Changes" comment="">
+    <list default="true" id="38707ce5-5cb0-4134-b79e-0683ad403790" name="Changes" comment="grafana working">
+      <change afterPath="$PROJECT_DIR$/docker/kafka/docker-compose.yml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/docker/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/docker/docker-compose.yml" afterDir="false" />
     </list>
@@ -128,10 +129,24 @@
       <workItem from="1751274838220" duration="625000" />
       <workItem from="1751533639161" duration="21000" />
       <workItem from="1757660337089" duration="4278000" />
+      <workItem from="1758536565383" duration="126000" />
     </task>
+    <task id="LOCAL-00001" summary="grafana working">
+      <option name="closed" value="true" />
+      <created>1758534244974</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1758534244974</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="grafana working" />
+    <option name="LAST_COMMIT_MESSAGE" value="grafana working" />
   </component>
 </project>
