@@ -1,17 +1,17 @@
-version: '3.8'
 services:
+
   mysql:
     image: mysql:latest
     container_name: mysql
     environment:
       MYSQL_ROOT_PASSWORD: rootpass
-      MYSQL_DATABASE: testdb
-      MYSQL_USER: user
-      MYSQL_PASSWORD: userpass
+      MYSQL_DATABASE: metabase
+      MYSQL_USER: metabase
+      MYSQL_PASSWORD: metabasepass
     ports:
       - "3306:3306"
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      test: [ "CMD", "mysqladmin", "ping", "-h", "127.0.0.1" ]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -46,67 +46,25 @@ services:
     networks:
       - app_network
 
-  kafka:
-    image: confluentinc/cp-kafka:7.2.1
-    hostname: kafka
-    container_name: kafka
-    ports:
-      - "9092:9092"    # host-exposed broker (legacy/host clients)
-      - "29092:29092"  # recommended external listener for host tools (map as you prefer)
-      - "29093:29093"  # controller listener exposed (optional)
-      - "9997:9997"    # JMX (if you need monitor)
-    environment:
-      # KRaft mode: controller + broker
-      KAFKA_PROCESS_ROLES: "controller,broker"
-      # Node id (unique int per node). For single-node set 1
-      KAFKA_NODE_ID: 1
-      # IMPORTANT: add the CLUSTER_ID you generated above (replace the example value)
-      KAFKA_CLUSTER_ID: "REPLACE_WITH_YOUR_GENERATED_CLUSTER_ID"
-
-      # Listeners: broker listener + controller listener + optional host listener
-      # Broker endpoints inside container (internal) and external for host
-      KAFKA_LISTENERS: "CONTROLLER://0.0.0.0:29093,INTERNAL://0.0.0.0:29092,EXTERNAL://0.0.0.0:9092"
-      KAFKA_ADVERTISED_LISTENERS: "CONTROLLER://kafka:29093,INTERNAL://kafka:29092,EXTERNAL://localhost:9092"
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: "CONTROLLER:PLAINTEXT,INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT"
-      # Inter-broker should use the INTERNAL listener
-      KAFKA_INTER_BROKER_LISTENER_NAME: "INTERNAL"
-      KAFKA_CONTROLLER_LISTENER_NAMES: "CONTROLLER"
-
-      # Useful local settings (tune as needed)
-      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
-      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
-      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
-      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
-      KAFKA_NUM_PARTITIONS: 1
-
-      # JMX (kept from your original)
-      KAFKA_JMX_PORT: 9997
-      KAFKA_JMX_OPTS: -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Djava.rmi.server.hostname=kafka -Dcom.sun.management.jmxremote.rmi.port=9997
-
-      # JVM heap (tune for your machine)
-      KAFKA_HEAP_OPTS: "-Xmx512m -Xms512m"
-
-    volumes:
-      - ./init-files/kafka/scripts/update_run.sh:/tmp/update_run.sh
-      - kafka_data:/var/lib/kafka/data
-    command: "bash -c 'if [ ! -f /tmp/update_run.sh ]; then echo \"ERROR: Did you forget the update_run.sh file that came with this docker-compose.yml file?\" && exit 1 ; else chmod +x /tmp/update_run.sh && /tmp/update_run.sh && /etc/confluent/docker/run ; fi'"
-    networks:
-      - app_network
-
-
   kafka-ui:
     image: provectuslabs/kafka-ui:latest
     container_name: kafka-ui
     ports:
-      - "8085:8080"
-    depends_on:
-      kafka:
-        condition: service_healthy
+      - "8085:8080" # Access kafka-ui at http://localhost:8085
     environment:
       KAFKA_CLUSTERS_0_NAME: local
       KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:9092
       DYNAMIC_CONFIG_ENABLED: 'true'
+    networks:
+      - app_network
+
+  grafana:
+    image: grafana/grafana-oss:latest
+    container_name: grafana
+    ports:
+      - "3002:3000" # Access kafka-ui at http://localhost:3002
+    volumes:
+      - grafana-data:/var/lib/grafana
     networks:
       - app_network
 
@@ -145,6 +103,7 @@ volumes:
   zookeeper_data:
   kafka_data:
   redis_data:
+  grafana-data:
 
 networks:
   app_network:
