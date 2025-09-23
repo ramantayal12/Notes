@@ -1,0 +1,28 @@
+services:
+  grafana:
+    image: grafana/grafana-oss:latest
+    container_name: grafana
+    ports:
+      - "3002:3000" # Access grafan at http://localhost:3002
+    volumes:
+      - grafana-data:/var/lib/grafana
+    networks:
+      - app_network
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    ports:
+      - "9090:9090" # Access prometheus at http://localhost:9090
+    volumes:
+      - prometheus-data:/prometheus
+    networks:
+      - app_network
+
+volumes:
+  grafana-data:
+  prometheus-data:
+
+networks:
+  app_network:
+    driver: bridge

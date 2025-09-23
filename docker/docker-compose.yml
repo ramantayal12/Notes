@@ -1,24 +1,5 @@
 services:
 
-  mysql:
-    image: mysql:latest
-    container_name: mysql
-    environment:
-      MYSQL_ROOT_PASSWORD: rootpass
-      MYSQL_DATABASE: metabase
-      MYSQL_USER: metabase
-      MYSQL_PASSWORD: metabasepass
-    ports:
-      - "3306:3306"
-    healthcheck:
-      test: [ "CMD", "mysqladmin", "ping", "-h", "127.0.0.1" ]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-      start_period: 30s
-    networks:
-      - app_network
-
   zookeeper:
     image: bitnami/zookeeper:latest
     container_name: zookeeper
@@ -35,26 +16,6 @@ services:
       timeout: 5s
       retries: 5
       start_period: 10s
-
-  redis:
-    image: redis:latest
-    hostname: redis
-    ports:
-      - "6379:6379"
-    volumes:
-      - redis_data:/data
-    networks:
-      - app_network
-
-  grafana:
-    image: grafana/grafana-oss:latest
-    container_name: grafana
-    ports:
-      - "3002:3000" # Access kafka-ui at http://localhost:3002
-    volumes:
-      - grafana-data:/var/lib/grafana
-    networks:
-      - app_network
 
   hbase:
     image: harisekhon/hbase:latest
@@ -89,7 +50,6 @@ services:
 volumes:
   hbase_data:
   zookeeper_data:
-  redis_data:
   grafana-data:
 
 networks:

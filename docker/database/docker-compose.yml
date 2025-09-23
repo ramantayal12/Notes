@@ -1,0 +1,41 @@
+services:
+
+  mysql:
+    image: mysql:latest
+    container_name: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_DATABASE: metabase
+      MYSQL_USER: metabase
+      MYSQL_PASSWORD: metabasepass
+    ports:
+      - "3306:3306"
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "127.0.0.1" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    volumes:
+      - mysql-data:/data
+    networks:
+      - app_network
+
+  redis:
+    image: redis:latest
+    container_name: redis
+    hostname: redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    networks:
+      - app_network
+
+volumes:
+  redis-data:
+  mysql-data:
+
+networks:
+  app_network:
+    driver: bridge
