@@ -21,19 +21,8 @@ services:
     networks:
       - app_network
 
-  redis:
-    image: redis:latest
-    container_name: redis
-    hostname: redis
-    ports:
-      - "6379:6379"
-    volumes:
-      - redis-data:/data
-    networks:
-      - app_network
 
 volumes:
-  redis-data:
   mysql-data:
 
 networks:

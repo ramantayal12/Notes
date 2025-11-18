@@ -4,10 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="38707ce5-5cb0-4134-b79e-0683ad403790" name="Changes" comment="grafana working">
-      <change afterPath="$PROJECT_DIR$/docker/kafka/docker-compose.yml" afterDir="false" />
+    <list default="true" id="38707ce5-5cb0-4134-b79e-0683ad403790" name="Changes" comment="prometheus and grafana working">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docker/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/docker/docker-compose.yml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -68,14 +66,14 @@
       <recent name="$PROJECT_DIR$/python" />
     </key>
   </component>
-  <component name="RunManager" selected="Docker.docker.kafka: Compose Deployment">
+  <component name="RunManager" selected="Docker.hbase.kafka: Compose Deployment">
     <configuration default="true" type="docker-deploy" factoryName="docker-compose.yml" temporary="true">
       <deployment type="docker-compose.yml">
         <settings />
       </deployment>
       <method v="2" />
     </configuration>
-    <configuration name="docker.kafka: Compose Deployment" type="docker-deploy" factoryName="docker-compose.yml" temporary="true" server-name="Docker">
+    <configuration name="hbase.kafka: Compose Deployment" type="docker-deploy" factoryName="docker-compose.yml" temporary="true" server-name="Docker">
       <deployment type="docker-compose.yml">
         <settings>
           <option name="services">
@@ -83,12 +81,12 @@
               <option value="kafka" />
             </list>
           </option>
-          <option name="sourceFilePath" value="docker/docker-compose.yml" />
+          <option name="sourceFilePath" value="docker/database/hbase/docker-compose.yml" />
         </settings>
       </deployment>
       <method v="2" />
     </configuration>
-    <configuration name="docker.mysql: Compose Deployment" type="docker-deploy" factoryName="docker-compose.yml" temporary="true" server-name="Docker">
+    <configuration name="hbase.mysql: Compose Deployment" type="docker-deploy" factoryName="docker-compose.yml" temporary="true" server-name="Docker">
       <deployment type="docker-compose.yml">
         <settings>
           <option name="services">
@@ -96,15 +94,15 @@
               <option value="mysql" />
             </list>
           </option>
-          <option name="sourceFilePath" value="docker/docker-compose.yml" />
+          <option name="sourceFilePath" value="docker/database/hbase/docker-compose.yml" />
         </settings>
       </deployment>
       <method v="2" />
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Docker.docker.kafka: Compose Deployment" />
-        <item itemvalue="Docker.docker.mysql: Compose Deployment" />
+        <item itemvalue="Docker.hbase.kafka: Compose Deployment" />
+        <item itemvalue="Docker.hbase.mysql: Compose Deployment" />
       </list>
     </recent_temporary>
   </component>
@@ -129,7 +127,7 @@
       <workItem from="1751274838220" duration="625000" />
       <workItem from="1751533639161" duration="21000" />
       <workItem from="1757660337089" duration="4278000" />
-      <workItem from="1758536565383" duration="126000" />
+      <workItem from="1758536565383" duration="6073000" />
     </task>
     <task id="LOCAL-00001" summary="grafana working">
       <option name="closed" value="true" />
@@ -139,7 +137,23 @@
       <option name="project" value="LOCAL" />
       <updated>1758534244974</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="kafka working">
+      <option name="closed" value="true" />
+      <created>1758536701464</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1758536701464</updated>
+    </task>
+    <task id="LOCAL-00003" summary="prometheus and grafana working">
+      <option name="closed" value="true" />
+      <created>1758609905461</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1758609905461</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -147,6 +161,8 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="grafana working" />
-    <option name="LAST_COMMIT_MESSAGE" value="grafana working" />
+    <MESSAGE value="kafka working" />
+    <MESSAGE value="prometheus and grafana working" />
+    <option name="LAST_COMMIT_MESSAGE" value="prometheus and grafana working" />
   </component>
 </project>
